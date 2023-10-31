@@ -1,0 +1,14 @@
+/* styles.css */
+
+/* Customize the color of the top navbar */
+.navbar {
+    background-color: #5b93ce; /* Change this to your desired color */
+}
+
+.sidebar
+{
+    background-color: rgba(252, 252, 252, 0); /* Change this to your desired color */
+    color: hsl(0, 0%, 0%); /* Change text color as needed */
+}
+
+
