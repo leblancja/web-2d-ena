@@ -91,10 +91,24 @@ function createShaderProgram(gl,vertexShaderSource,fragmentShaderSource) {
     return shaderProgram;
 }
 
+const Shape = new Shape();
+const shaderProgram = createShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
+
+//handle errors
+if (!shaderProgram) {
+    console.error("Error creating shader program.");
+} else {
+    //get attributes and uniform locations
+    const positionAttributeLocation = gl.getAttributeLocation(shaderProgram, "aPosition");
+    const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, "uResolution");
+    const colorUniformLocation = gl.getUniformLocation(shaderProgram, "uColor");
+
+    //create buffer for shape vertices
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+}
 
 // Set the clear color and clear the canvas
 gl.clearColor(0.0, 0.0, 0.0, 1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-// Now, you can start rendering your graphics using WebGL functions
-// Add your rendering code here
