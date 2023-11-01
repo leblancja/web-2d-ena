@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block py-2 px-0 sidebar">
-                <!-- You can add sidebar content here -->
+                <!-- sidebar content -->
                 <ul class="nav flex-column col-md-10 border">
                     <li class="nav-item rounded-right border">
                         <a class="nav-link active" href="#">Item 1</a>
@@ -50,14 +50,27 @@
                 </ul>
             </nav>
             <main class="col-md-10 bg-light">
-                <canvas id="webgl-canvas" class="w-100"></canvas>   
+                <canvas id="webgl-canvas" class="w-100"></canvas>
+                <div class="row">
+                    <div class="col-md-3">
+                        <input id="color-input" type="text" class="form-control" placeholder="Enter a color (e.g., red, #00FF00)">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="position-input" type="text" class="form-control" placeholder="Enter position (e.g., x,y)">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="vertices-input" type="text" class="form-control" placeholder="Enter vertices (e.g., x1,y1 x2,y2 x3,y3)">
+                    </div>
+                    <div class="col-md-2">
+                        <button id="update-button" class="btn btn-primary">Update Shape</button>
+                    </div>
+                </div>   
             </main>
         </div>
-
     </div>
 
     <script src="scripts/render2d.js"></script>
-    <!-- Bootstrap JS Scripts (Remember to include jQuery and Popper.js as well) -->
+    <!-- Bootstrap JS Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
