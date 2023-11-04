@@ -5,50 +5,50 @@ class Shape {
         this.pos = parsePos(pos) || [0.0,0.0];
         this.col = parseColor(col) || [1.0,0.0,0.0];
     }
-
-    updateVerts(vertsIn){
-        this.verts = parseVerts(vertsIn);
-    }
-
-    updatePos(posIn){
-        this.pos = parsePos(posIn);
-    }
-
-    updateCol(colIn){
-        this.col = parseCol(colIn);
-    }
 }
 
-//Get the canvas element
-const canvas = document.getElementById("webgl-canvas");
-
-//Initialize the WebGL context
-const gl = canvas.getContext("webgl");
-
-if (!gl) {
-    console.error("WebGL is not supported in this browser.");
+// Parse color input
+function parseColor(colIn) {
+    let col = document.getElementById("color-input").value;
+    if (!col) {
+        return null;
+    }
+    // Convert color name to RGB
+    if (!col.startsWith('#')) {
+        let tempElem = document.createElement('temp');
+        tempElem.style.color = col;
+        col = window.getComputedStyle(tempElem, null).getPropertyValue('color');
+    }
+    // Convert hex color to RGB
+    if (col.startsWith('#')) {
+        let bigint = parseInt(col.slice(1), 16);
+        let r = ((bigint >> 16) & 255) / 255;
+        let g = ((bigint >> 8) & 255) / 255;
+        let b = (bigint & 255) / 255;
+        return [r, g, b];
+    }
+    // Parse RGB color
+    let rgb = col.match(/\d+/g);
+    return rgb.map(x => parseInt(x) / 255);
 }
 
-//vertex shader
-const vertexShaderSource = `
-    attribute vec2 aPosition;
-    uniform vec2 uResolution;
-
-    void main() {
-        vec2 clipSpace = ((aPosition / uResolution) * 2.0) - 1.0;
-        gl_Position = vec4(clipSpace, 0, 1);
+// Parse position input
+function parsePos(posIn) {
+    let pos = document.getElementById("position-input").value;
+    if (!pos) {
+        return null;
     }
-`;
+    return pos.split(',').map(x => parseFloat(x));
+}
 
-//fragment shader
-const fragmentShaderSource = `
-    precision mediump float;
-    uniform vec3 uColor;
-
-    void main() {
-        gl_FragColor = vec4(uColor, 1.0)
+// Parse vertices input
+function parseVerts(vertsIn) {
+    let verts = document.getElementById("vertices-input").value;
+    if (!verts) {
+        return null;
     }
-`;
+    return verts.split(' ').map(x => x.split(',').map(y => parseFloat(y)));
+}
 
 //compiling and linking the shaders to a shader program
 function createShaderProgram(gl,vertexShaderSource,fragmentShaderSource) {
@@ -91,7 +91,56 @@ function createShaderProgram(gl,vertexShaderSource,fragmentShaderSource) {
     return shaderProgram;
 }
 
-const Shape = new Shape();
+function render() {
+    // Clear the canvas
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    // Loop over the shapes and draw each one
+    for (let shape of shapes) {
+        // Set the shape data in the buffers
+        setBufferData(shape);
+        
+        // Draw the shape
+        gl.drawArrays(gl.TRIANGLES, 0, shape.verts.length);
+    }
+}
+
+
+//Get the canvas element
+const canvas = document.getElementById("webgl-canvas");
+
+//Initialize the WebGL context
+const gl = canvas.getContext("webgl");
+
+if (!gl) {
+    console.error("WebGL is not supported in this browser.");
+}
+
+//Set the clear color of the canvas
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+//vertex shader
+const vertexShaderSource = `
+    attribute vec2 aPosition;
+    uniform vec2 uResolution;
+
+    void main() {
+        vec2 clipSpace = ((aPosition / uResolution) * 2.0) - 1.0;
+        gl_Position = vec4(clipSpace, 0, 1);
+    }
+`;
+
+//fragment shader
+const fragmentShaderSource = `
+    precision mediump float;
+    uniform vec3 uColor;
+
+    void main() {
+        gl_FragColor = vec4(uColor, 1.0)
+    }
+`;
+
+//Create the shader program
 const shaderProgram = createShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
 
 //handle errors
@@ -108,7 +157,21 @@ if (!shaderProgram) {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 }
 
-// Set the clear color and clear the canvas
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
-gl.clear(gl.COLOR_BUFFER_BIT);
+// Add an event listener to the button
+document.getElementById("add-button").addEventListener("click", function() {
+    // Parse the inputs and create a new shape
+    let shape = new Shape(parseVerts(), parsePos(), parseColor());
+    
+    // Add the shape to the array
+    shapes.push(shape);
+    
+    // Render all shapes
+    render();
+});
+
+
+
+
+
+
 
