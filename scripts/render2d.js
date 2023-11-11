@@ -23,47 +23,10 @@ class Shape {
     }
 }
 
-//vertex shader
-const vertexShaderSource = `
-attribute vec2 aPosition;
-uniform vec2 uResolution;
-
-void main() {
-    vec2 clipSpace = ((aPosition / uResolution) * 2.0) - 1.0;
-    gl_Position = vec4(clipSpace, 0, 1);
-}
-`;
-
-//fragment shader
-const fragmentShaderSource = `
-precision mediump float;
-uniform vec3 uColor;
-
-void main() {
-    gl_FragColor = vec4(uColor, 1.0);
-}
-`;
-    
-
-
-//Create the shader program
-const shaderProgram = createShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
 
 
 
-let shapes = [];
-
-//handle errors
-if (!shaderProgram) {
-    console.error("Error creating shader program.");
-} else {
-    //get attributes and uniform locations
-    const positionAttributeLocation = gl.getAttribLocation(shaderProgram, "aPosition");
-    const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, "uResolution");
-    const colorUniformLocation = gl.getUniformLocation(shaderProgram, "uColor");
-    
-}
-
+/*
 // Parse color input
 function parseColor() {
     const colorInput = document.getElementById("color-input");
@@ -129,6 +92,45 @@ function parseVerts() {
     
     return verts.split(' ').map(x => x.split(',').map(y => parseFloat(y)));
 }
+*/
+
+//vertex shader
+const vertexShaderSource = `
+attribute vec2 aPosition;
+uniform vec2 uResolution;
+
+void main() {
+    vec2 clipSpace = ((aPosition / uResolution) * 2.0) - 1.0;
+    gl_Position = vec4(clipSpace, 0, 1);
+}
+`;
+
+//fragment shader
+const fragmentShaderSource = `
+precision mediump float;
+uniform vec3 uColor;
+
+void main() {
+    gl_FragColor = vec4(uColor, 1.0);
+}
+`;
+    
+//Create the shader program
+const shaderProgram = createShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
+
+//handle errors
+if (!shaderProgram) {
+    console.error("Error creating shader program.");
+} else {
+    //get attributes and uniform locations
+
+    const positionAttributeLocation = gl.getAttribLocation(shaderProgram, "aPosition");
+    const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, "uResolution");
+    const colorUniformLocation = gl.getUniformLocation(shaderProgram, "uColor");
+    console.log("Shader program created successfully");
+    
+}
+
 
 //compiling and linking the shaders to a shader program
 function createShaderProgram(gl,vertexShaderSource,fragmentShaderSource) {
@@ -170,6 +172,7 @@ function createShaderProgram(gl,vertexShaderSource,fragmentShaderSource) {
     console.log("program linked: "+gl.LINK_STATUS);
     return shaderProgram;
 }
+
 function setBufferData(shape, positionBuffer) {
 
     positionBuffer = gl.createBuffer();
@@ -210,6 +213,12 @@ function render(gl, shapes) {
     }
 }
 
+let shapes = [];
+let tri = new Shape();
+shapes.push(tri);
+render(gl,shapes);
+
+/*
 // Add an event listener to the button
 document.getElementById("add-button").addEventListener("click", function() {
     // Parse the inputs and create a new shape
@@ -223,7 +232,7 @@ document.getElementById("add-button").addEventListener("click", function() {
     // Render all shapes
     render(gl, shapes);
 });
-
+*/
 
 
 
