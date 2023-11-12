@@ -4,16 +4,17 @@ import { drawScene } from "./draw-scene.js";
 main();
 
 function main() {
-    //get the canvas element
-    const canvas = document.querySelector("#webgl-canvas");
-    
-    //initialize the WebGL context
-    const gl = canvas.getContext("webgl");
+    const canvas = document.querySelector("#glcanvas");
+     //initialize the GL context
+     const gl = canvas.getContext("webgl");
     
     if (gl === null) {
-    console.error("WebGL is not supported in this browser.");
-    }
-    console.log("Canvas dimensions: "+ canvas.width + "," + canvas.height);
+        alert(
+          "Unable to initialize WebGL. Your browser or machine may not support it.",
+        );
+        return;
+      }
+
     //set the clear color of the canvas
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     //clear the color buffer
